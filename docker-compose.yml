@@ -1,0 +1,43 @@
+services:
+  guestbook-app:
+    image: guestbook
+    restart: always
+    ports:
+      - "3001:3000"
+    environment:
+      PORT: "3000"
+    networks: 
+      frontend:
+    volumes:
+      - frontend:/app
+    
+  guestbook-server:
+    image: guestbook-server
+    restart: always
+    ports:
+      - "3002:3000"
+    networks: 
+      backend:
+    links: 
+      - mongo:database
+    volumes:
+      - backend:/app
+    environment:
+      MONGO_URI: "mongodb://root:Passord1@localhost:27017/?authMechanism=DEFAULT"
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      backend:
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: Passord1
+
+networks:
+  frontend:
+  backend:
+volumes:
+  frontend:
+  backend:
