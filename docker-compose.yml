@@ -6,24 +6,24 @@ services:
       - "3001:3000"
     environment:
       PORT: "3000"
-    networks: 
+    networks:
       frontend:
     volumes:
       - frontend:/app
-    
+
   guestbook-server:
     image: guestbook-server
     restart: always
     ports:
       - "3002:3000"
-    networks: 
+    networks:
       backend:
-    links: 
+    links:
       - mongo:database
     volumes:
       - backend:/app
     environment:
-      MONGO_URI: "mongodb://root:Passord1@localhost:27017/?authMechanism=DEFAULT"
+      MONGO_URI: "mongodb://root:Passord1@mongo:27017/?authMechanism=DEFAULT"
   mongo:
     image: mongo
     restart: always
