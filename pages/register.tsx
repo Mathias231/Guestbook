@@ -3,35 +3,73 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Register() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [repeatPass, setRepeat] = useState('');
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [repeatPass, setRepeat] = useState<string>('');
 
-  // Checks if password and repeatPass is matching
+  /**
+   * If the password and repeat password is not the same, send a message to the user
+   * @param {string | number} pass - string | number - The password that the user has entered
+   * @param {string | number} rep - string | number - This is the password that the user has entered in
+   * the password field
+   * @returns A boolean value
+   */
   const notify = (pass: string | number, rep: string | number) => {
-    if (pass === rep) {
-      toast.success('Logger inn', {
-        position: "top-center",
-        hideProgressBar: true,
-    })
-      return true;
-    } else {
-      toast.error('Passord stemmer ikke', { position: "top-center" })
+    if (pass !== rep) {
+      // Sends back message to user about password not matching
+      toast.error('Passordet er ikke lik', { position: 'top-center' });
       return false;
     }
-  }
+    return true;
+  };
 
-  // Handle form submit
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    
-    
+    e.preventDefault();
 
-  }
+    // If true, send data to back-end (server scripts)
+    if (notify(password, repeatPass)) {
+      fetch('http://localhost:3002/register', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: username, password: password }),
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error('Network response was not OK');
+          }
+
+          console.log(res);
+
+          if (res.status === 201) {
+            toast.success('Bruker opprettet', {
+              position: 'top-center',
+              hideProgressBar: true,
+            });
+          }
+
+          if (res.status === 226) {
+            toast.warn('Bruker eksisterer allrede', {
+              position: 'top-center',
+              hideProgressBar: true,
+            });
+          }
+        })
+        .catch((err) => {
+          console.error('Error:', err);
+        });
+    }
+  };
 
   return (
     <div className="flex justify-center">
-      <form className="bg-slate-100 p-2 mt-2 rounded-md 2xl:w-96" onSubmit={handleSubmit}>
+      <form
+        className="bg-slate-100 p-2 mt-2 rounded-md 2xl:w-96"
+        onSubmit={handleSubmit}
+      >
         <label className="block">
           <span className="block mt-1 font-medium text-center">
             Registrer bruker
@@ -65,9 +103,12 @@ function Register() {
             className="mt-2 block w-full px-3 py-2 bg-white border rounded-md shadow-md focus:outline-cyan-500"
           ></input>
         </label>
-          <button className="bg-cyan-300 block w-full border rounded-md mt-4 p-2" type='submit'>
-            Opprett bruker
-          </button>
+        <button
+          className="bg-cyan-300 block w-full border rounded-md mt-4 p-2"
+          type="submit"
+        >
+          Opprett bruker
+        </button>
       </form>
       <ToastContainer />
     </div>
