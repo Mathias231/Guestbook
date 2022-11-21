@@ -5,9 +5,33 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  /**
+   * A function that is called when the user submits the login form. It prevents the default action of
+   * the form submission, and then it sends a POST request to the server with the username and password.
+   * @param e - React.FormEvent<HTMLFormElement>
+   */
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(username, password);
+
+    fetch('http://localhost:3002/login', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username: username, password: password }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Network response was not OK');
+        }
+
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+      });
   };
 
   return (
@@ -24,6 +48,7 @@ function Login() {
             type="text"
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
+            required
             className="mt-4 block w-full px-3 py-2 bg-white border rounded-md shadow-md focus:outline-cyan-500"
           ></input>
         </label>
@@ -32,6 +57,7 @@ function Login() {
             type="password"
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            required
             className="mt-1 block w-full px-3 py-2 bg-white border rounded-md shadow-md focus:outline-cyan-500"
           ></input>
         </label>
@@ -41,7 +67,9 @@ function Login() {
           </button>
         </label>
         <div className="mt-4 text-center">
-          <Link href="/register">Dont have an account?</Link>
+          <Link href="/register" as={`/register/`}>
+            Dont have an account?
+          </Link>
         </div>
       </form>
     </div>
