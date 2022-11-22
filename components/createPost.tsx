@@ -1,16 +1,18 @@
 import React from 'react';
 
 function CreatePost() {
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log("Clicked")
+    console.log('Clicked');
+  };
 
-  }
   return (
     <div className="flex justify-center">
-      <form className="bg-slate-100 p-2 mt-2 rounded-md 2xl:w-96" onSubmit={handleSubmit}>
+      <form
+        className="bg-slate-100 p-2 mt-2 rounded-md 2xl:w-96"
+        onSubmit={handleSubmit}
+      >
         <label className="block">
           <span className="block mt-1 font-medium text-center">Title</span>
           <input
