@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -28,6 +30,20 @@ function Login() {
         }
 
         console.log(res);
+
+        if (res.status === 202) {
+          toast.success('Logger inn', {
+            position: 'top-center',
+            hideProgressBar: true,
+          });
+        }
+
+        if (res.status === 204) {
+          toast.warn('Brukernavn eller passord er feil', {
+            position: 'top-center',
+            hideProgressBar: true,
+          });
+        }
       })
       .catch((err) => {
         console.error('Error:', err);
@@ -72,6 +88,7 @@ function Login() {
           </Link>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 }
