@@ -31,6 +31,7 @@ function Login() {
 
         console.log(res);
 
+        // If login was success
         if (res.status === 202) {
           toast.success('Logger inn', {
             position: 'top-center',
@@ -38,6 +39,7 @@ function Login() {
           });
         }
 
+        // If login request failed
         if (res.status === 204) {
           toast.warn('Brukernavn eller passord er feil', {
             position: 'top-center',
